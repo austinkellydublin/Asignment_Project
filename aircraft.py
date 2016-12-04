@@ -26,11 +26,6 @@ class Aircraft:
         self.details = outerdict[self.model]
         self.range = int(self.details['range'])
 
-
-
-
-
-
 def main():
     x = Aircraft('777')
     print(x.details)
