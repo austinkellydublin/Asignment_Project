@@ -22,17 +22,3 @@ class Airport:
         self.longitude = float(self.details['longitude'])
         self.latitude = float(self.details['latitude'])
         self.country = self.details['country']
-
-
-def main():
-    x = Airport('DUB')
-    print(x.longitude)
-    print(x.code)
-    print(x.latitude)
-    print(x.country)
-
-if __name__=='__main__':
-    main()
-
-
-

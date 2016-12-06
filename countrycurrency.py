@@ -1,6 +1,7 @@
+#countrycurrency
 import csv
 
-class Currency:
+class Countrycurrency:
 
     def __init__(self, country):
         self.country=country
@@ -29,7 +30,7 @@ class Currency:
             #print(outerdict['Chile'])
 
 def main():
-    x= Currency('Australia')
+    x= Countrycurrency('Australia')
 
 
     print(x.currencycode)

@@ -1,3 +1,5 @@
+#currencyrate
+
 import csv
 
 class Currencyrate:
