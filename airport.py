@@ -4,6 +4,7 @@ import csv
 class Airport:
 
     def getdetails(self):
+
         keys=['airportid','airportname','cityname','country','code','icaocode','latitude','longitude','altitude','timeoffset','dst','tz']
         with open('airports.csv', encoding='utf-8') as f:
             rows = csv.reader(f)

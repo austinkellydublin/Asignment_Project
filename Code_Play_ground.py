@@ -85,20 +85,29 @@ from route import *
 # for i in candidatesroutes:
 
 leglist=[23,56,13,56,15,66,13,13,33,18]
-print(len(leglist))
-priceofleg=[1.23,2.3,1.3,1.23,1.1,1.5,1.3,2.0,1.3,1.5]
-print(len(priceofleg))
-fuelrange=0
-range=90
-cheapestinrange=''
-rangeee=o
-for index,value in (enumerate(leglist)):
-    print(index,value)
-    while rangee <= range:
+# print(len(leglist))
+# priceofleg=[1.23,2.3,1.3,1.23,1.1,1.5,1.3,2.0,1.3,1.5]
+# print(len(priceofleg))
+# fuelrange=0
+# range=90
+# cheapestinrange=''
+# rangeee=o
+# for index,value in (enumerate(leglist)):
+#     print(index,value)
+#     while rangee <= range:
 
 
-
-
+self.portlist_inrange = {}
+rangedict = {}
+for i in range(1: 7):  # loop for each airport
+    for k in range(i: 7):  # only consider legs beyond airport to build dictionary of lists for reach port from a given airport
+        rangelist = []
+        strikerange = 0
+         portlist_inrange[i] = {}
+         if strikerange + leglist[ k] < range:  # if haven't gone beyond range examine next leg as candidate for reachables
+            strikerange += leglist[k]  # increment distance travelled
+            rangelist.append(portlist[k + 1])  # append end port to reachable list
+            portlist_inrange[i] = rangelist  # update list of reachable ports for a given airport
 
 
 
