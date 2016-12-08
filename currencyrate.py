@@ -15,7 +15,7 @@ class Currencyrate:
             keys = ['currencyname', 'currencycode', 'toeuro', 'fromeuro']
             rows = csv.reader(f)
             lista = list(rows)
-            print(keys)
+            # print(keys)
             for row in lista[:]:  # create an object
                 innerobject = {keys[0]: row[0], keys[1]: row[1], keys[2]: row[2],
                                keys[3]: row[3]}  # add object to lib with its model as key
@@ -28,6 +28,6 @@ def main():
 
 
     print(x.toeuro)
-    print(x.fromeuro)
+    # print(x.fromeuro)
 
 main()
