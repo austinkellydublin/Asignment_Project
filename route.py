@@ -72,82 +72,146 @@ class Route:
 
        # print('leg1', self.leg1,'  leg2', self.leg2,'  leg3', self.leg3,'  leg4', self.leg4,'  leg5', self.leg5,'  leg6', self.leg6)
         #print(self.routedist)
+        self.cleanup_candidate_routes()
         self.portsinrange()
 # craft= Aircraft('777')
 # print('range  :',craft.range)
 
 
+    def cleanup_candidate_routes(self):
+        todelete = []
+        maxfuelrange = 7500 #self.craft.range  ## get fuel tank range
+        for routenumber, route in self.candidates.items():
+            # get each candidate route
+            if routenumber < 24:  # for five legged journeys
+                legslist = Legdistances(route[0], route[1], route[2], route[3], route[4], route[5]).legslist
+                legslist.pop()
+                for leg in legslist:
+                    if leg > maxfuelrange:
+                        todelete.append(routenumber)
+                        break  ####note if not here it will evaluate again for a second leg not valid therefore get routenumber appended a couple of times CAREFUL
+
+        #print(todelete)
+
+            if routenumber >= 24:  ##then will have 7 airports and 6 legs
+                legslist = Legdistances(route[0], route[1], route[2], route[3], route[4], route[5], route[6]).legslist
+                # print(candkey,'  ',legslist)
+                for leg in legslist:
+                    if leg > maxfuelrange:
+                        todelete.append(routenumber)
+                        break
+        print(todelete)
+
+        for each in todelete:
+            #print('will delete',each)
+            del self.candidates[each]
+        print(self.candidates)
+
+
+
+
     def portsinrange(self):
-        ##at each airport will need a list of airports within fuel tank range these will be stored in a dictionary portlist_inrange
-        maxfuelrange= self.craft.range ## get fuel tank range
-        portlist_inrange = {}
-        for index, portlista in self.candidates.items(): #get each candidate route
-            portlista = list(portlista)
-           # print('here we go',index,'  ',portlista)
-            if index<24: #for five legged journeys
-                legslist = Legdistances(portlista[0],portlista[1],portlista[2],portlista[3],portlista[4],portlista[5]).legslist
-                for i in range(0,5): # for  all ports up to last port but excluding it
-                   # print('i', i)
-                    portlist_inrange[i]=[] # setup parent list for children lists
-                    rangelist = [] #set up child list
-                    fuel = maxfuelrange
-                    for k in range(i,5): # for sucessive ports there are less ports ahead
-                       # print('k', k)
-                        if fuel >= legslist[k]: #
-                            rangelist.append(portlista[k+1]) #add port at end of leg as reachable
-                            portlist_inrange[i] = rangelist #update parent list with amended child
-                            fuel -= legslist[k]   # adjust fuel in algorithm else will evaluate other legs and include them if the pass criteria
-                        else:
-                            break # if any port out of range then no sense in evaluating more distant ports so set fuel to zero
+        candidates_legs={}
+        todelete=[]
+        maxfuelrange = self.craft.range
+        newdictionary_routenumber_listoflistforallitsports = {}
+        for routenumber, route in self.candidates.items(): ## a route is a collection of airports todo call dictionary something info
+            #todo want to collect dictionary of reachable ports and store them against routenumber
+            arouteslistoflists=[]
 
-                        # update list of reachable ports for a given airport
-                print(index,'\n\n',portlista,'\n',portlist_inrange,'\n\n')
-            if index>=24:##then will have 7 airports and 6 legs
-                legslist = Legdistances(portlista[0], portlista[1], portlista[2], portlista[3], portlista[4],
-                                        portlista[5],portlista[6]).legslist
-                for i in range(0, 6):  # for  all ports up to last port
-                   # print('i', i)
-                    portlist_inrange[i] = []
-                    rangelist = []
-                    fuel = maxfuelrange
-                    for k in range(i, 6):  # for legs ahead each port
-                       # print('k', k)
-                        if fuel >= legslist[k]:
-                            rangelist.append(portlista[k + 1])
-                            portlist_inrange[i] = rangelist
-                            fuel -= legslist[k]  # even route out of range must adjust fuel in algorithm else will evaluate other legs and include them if the pass criteria
-                        else:
-                            break
-                print(index, '\n\n', portlista, '\n', portlist_inrange, '\n\n')
+            if routenumber < 24:  # for five legged journeys
+                legsdist = Legdistances(route[0], route[1], route[2], route[3], route[4], route[5]).legslist
+                legsdist.pop()
+                candidates_legs[routenumber]=legsdist
+                #print(route)
+                #print('legsdist',legsdist)
 
 
-                    #else: break
-       # print(self.portlist_inrange)
-        #print([self.port1.code, self.port2.code, self.port3.code, self.port4.code, self.port5.code, self.port6.code, self.port7.code])
-        #print(self.portlist[3].code)
+                for port in range(5):#todo for each port on a route build its itinary and store each itinary as an elemment
+                    #print('just to know what route working for route number',routenumber ,route)
+                    startnumber=port #read in port to start from
+                    #print('at port',route[port])##check port name starting from
+                    listforeachport=[]#prepare a list to be filled by second members clicks   second loop will add a entry on each of its clicks
+                    #print('fresh list for  to fill',listforeachport)
+                    # list i in dictionary info_about will store the chain of  airports reachable from ith airport on a fuel tank
+                    fuel = maxfuelrange #from each port can start with full tank
+                    #print('start fuel',fuel)
+                    for leg in range(port, 5): #second loop to fill work list with reachable airportsfor any given port
+                        #print(' at port', route[port]) #for each port will look at successive legs and see if can reach it
+                        #print('leg',leg)
+                        #build chain
+                        if legsdist[leg]>fuel:
+                            # append  port and its reachable chain into database about a rounte dictionary as finished building chain due to rest arenot reachable
+                             # here is where you need append info to the dictionary about a route as are about to leave the  and may also need to update if reach end of loop
+                            ##when port == 4  or maxed out about to finish with this route so updat its record
+                            #print('workerlist',listforeachport)
+                            #print('entered break')
+                            arouteslistoflists.append(listforeachport)
+                            break #stop building the chain when a leg to far is reached
+
+                        else:# else add the next aiport to the chain, then proceed to examine the next leg
+                           # print(cand[k+1])
+                            #info_about[i].append(cand[k + 1])
+
+                            listforeachport.append(route[leg + 1])
+                            #print('oringinal list',route,'could reach so append port to listforeachport',listforeachport)
+                            fuel= fuel - legsdist[leg]
+                            #print('new fuel',fuel)
+                            if leg==4:
+                                arouteslistoflists.append(listforeachport)
+
+                                # todo append  port and its reachable chain into database about a rounte dictionary as finished building chain due to rest arenot reachable
+                                #todo where and how do we update database before we leave loop port:its reachable list
+                                ##todo when port == 4  or maxed out about to finish with this route so updat its record
+                                break ##donot need this break but good to highlight logic
 
 
+                    newdictionary_routenumber_listoflistforallitsports[routenumber]=arouteslistoflists
 
-    # def findbestroute(self):
-    #     bestroute={}
-    #
-    #     for index, eachcandidate in self.candidates.items():
-    #         eachcandidate = list(eachcandidate)
-    #         print('here we go',index,'  ',eachcandidate)
-    #         if index<24:#process 5 leg routes
-
-             #   eachcandidate=
-
-               ## --create route object but set genpermsflag to false as donot need permutations regenerated//DONOT NEED THIS IF I USE A LOOKUP DICT
-                #with the route object pick of each airport at start ot leg (know its currency and use fuelling stragegy to evaluate cost keep track of costs
-        #         pass
-        #     else:#process six leg routes
-        #         pass
-        # pass
+            if routenumber >=24 :  # for five legged journeys
+                legsdist = Legdistances(route[0], route[1], route[2], route[3], route[4], route[5],route[6]).legslist
+                candidates_legs[routenumber] = legsdist
+                # print(route)
+                # print('legsdist',legsdist)
 
 
+                for port in range(6):  #  for each port on a route build its itinary and store each itinary as an elemment
+                    listforeachport = []  # prepare a list to be filled by second members clicks   second loop will add a entry on each of its clicks
+                    fuel = maxfuelrange  # from each port can start with full tank
+                    for leg in range(port, 6):  # second loop to fill work list with reachable airportsfor any given port
+                        if legsdist[leg] > fuel:
+                            arouteslistoflists.append(listforeachport)
+                            break  # stop building the chain when a leg to far is reached
+                        else:  # else add the next aiport to the chain, then proceed to examine the next leg
+                            listforeachport.append(route[leg + 1])
+                            fuel = fuel - legsdist[leg]
+                            # print('new fuel',fuel)
+                            if leg == 5:
+                                arouteslistoflists.append(listforeachport)
+                                break  ##donot need this break but good to highlight logic
 
-x = Route('SXR', 'TNI', 'AGX', 'BLR', 'YYU', '747')
+                    newdictionary_routenumber_listoflistforallitsports[routenumber] = arouteslistoflists
+
+        #print('for route',self.candidates[0],'at each station can reach following')
+        #print(newdictionary_routenumber_listoflistforallitsports[0])
+        #print('for route', self.candidates[26], 'at each station can reach following')
+        #print(newdictionary_routenumber_listoflistforallitsports[26])
+
+
+#### TODO HAVE ALL THE INFO I NEED   CANDIDATES,PORTSREACHABLE,PRICES,CANDIDATESLEGS
+
+
+x = Route('TXL', 'SFO', 'DUB', 'LHR', 'TLS', '747')
+# LDE	Tarbes	France
+# TLS	Toulouse	France
+# TUF	Tours	France
+# BUS	Batumi	Georgia
+# KUT	Kutaisi	Georgia
+# TBS	Tbilisi	Georgia
+# AOC	Altenburg	Germany
+# SXF	Berlin	Germany
+# TXL	Berlin	Germany
+# BWE
 # print(x.candidates)
 
 
