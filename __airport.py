@@ -25,7 +25,7 @@ class Airport:
         self.latitude = float(self.details['latitude'])
         self.country = self.details['country']
         self.currency = Countrycurrency(self.details['country']).currencycode
-        self.currencyeurorate= Currencyrate(self.currency).toeuro
+        self.currencyeurorate= float(Currencyrate(self.currency).toeuro)
 
 
 

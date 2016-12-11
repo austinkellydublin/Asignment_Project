@@ -7,6 +7,8 @@ class Aircraft:
     def __init__(self, model):
         self.model=model
         self.object_details()
+        self.fuel=0
+
 
     def object_details(self):
         with open('aircraft.csv') as f:

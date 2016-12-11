@@ -3,9 +3,10 @@ from currencyrate import *
 from __airport import  *
 from countrycurrency import *
 from calculatedistance import *
-from aircraft import *
 from itertools import *
 from legdistances import *
+from aircraft import *
+
 
 
 class Route:
@@ -18,6 +19,7 @@ class Route:
         self.port6 = Airport(port1)## need to reasign these for permutations
         self.port7=Airport(port1)## defaults are home
         self.genperms=genperms
+
         #self.calclegs()
         self.portlist=[self.port1,self.port2,self.port3,self.port4,self.port5,self.port6,self.port7]
         self.craft = Aircraft(craft)
@@ -72,15 +74,17 @@ class Route:
 
        # print('leg1', self.leg1,'  leg2', self.leg2,'  leg3', self.leg3,'  leg4', self.leg4,'  leg5', self.leg5,'  leg6', self.leg6)
         #print(self.routedist)
+        ##########################################self.cleanup_candidate_routes()
         self.cleanup_candidate_routes()
         self.portsinrange()
+        self.cheapest()
 # craft= Aircraft('777')
 # print('range  :',craft.range)
 
 
-    def cleanup_candidate_routes(self):
+    def cleanup_candidate_routes(self):####GET RID OF ROUTES THAT HAVE A LEG GREATER THAN FUEL TANK CAPACITIY
         todelete = []
-        maxfuelrange = 7500 #self.craft.range  ## get fuel tank range
+        maxfuelrange = self.craft.range  ## get fuel tank range
         for routenumber, route in self.candidates.items():
             # get each candidate route
             if routenumber < 24:  # for five legged journeys
@@ -91,8 +95,6 @@ class Route:
                         todelete.append(routenumber)
                         break  ####note if not here it will evaluate again for a second leg not valid therefore get routenumber appended a couple of times CAREFUL
 
-        #print(todelete)
-
             if routenumber >= 24:  ##then will have 7 airports and 6 legs
                 legslist = Legdistances(route[0], route[1], route[2], route[3], route[4], route[5], route[6]).legslist
                 # print(candkey,'  ',legslist)
@@ -100,109 +102,316 @@ class Route:
                     if leg > maxfuelrange:
                         todelete.append(routenumber)
                         break
-        print(todelete)
+        #print(todelete) todo
 
         for each in todelete:
             #print('will delete',each)
             del self.candidates[each]
-        print(self.candidates)
+        #print(self.candidates) todo
 
 
 
 
-    def portsinrange(self):
-        candidates_legs={}
+    def portsinrange(self):# FOR EACH ROUTE GENERATE A SET OF SUBROUTES WITH AIRPORT AHEAD WITHIN FLYING RANGE OF ANY GIVEN PORT FOR EACH HUB
+
+        self.candidates_legs={}
         todelete=[]
         maxfuelrange = self.craft.range
-        newdictionary_routenumber_listoflistforallitsports = {}
+        self.inrange = {} ##THIS WILL HOLD THE LIST OF SUBROUTES KEYED WITH SAME KEY AS THE MASTER ROUTE
         for routenumber, route in self.candidates.items(): ## a route is a collection of airports todo call dictionary something info
             #todo want to collect dictionary of reachable ports and store them against routenumber
-            arouteslistoflists=[]
+            aroutessubroutecollection=[]
 
             if routenumber < 24:  # for five legged journeys
                 legsdist = Legdistances(route[0], route[1], route[2], route[3], route[4], route[5]).legslist
                 legsdist.pop()
-                candidates_legs[routenumber]=legsdist
-                #print(route)
+                self.candidates_legs[routenumber]=legsdist
+               # print(route)
                 #print('legsdist',legsdist)
-
+                aportssubroute=[] #todo kk
 
                 for port in range(5):#todo for each port on a route build its itinary and store each itinary as an elemment
                     #print('just to know what route working for route number',routenumber ,route)
-                    startnumber=port #read in port to start from
-                    #print('at port',route[port])##check port name starting from
-                    listforeachport=[]#prepare a list to be filled by second members clicks   second loop will add a entry on each of its clicks
-                    #print('fresh list for  to fill',listforeachport)
+
+                   # print('at port',route[port])##check port name starting from
+                    #prepare a list to be filled by second members clicks   second loop will add a entry on each of its clicks
+                    #print('fresh list for  to fill',aportssubroute)
                     # list i in dictionary info_about will store the chain of  airports reachable from ith airport on a fuel tank
                     fuel = maxfuelrange #from each port can start with full tank
                     #print('start fuel',fuel)
+                    aportssubroute = []
                     for leg in range(port, 5): #second loop to fill work list with reachable airportsfor any given port
                         #print(' at port', route[port]) #for each port will look at successive legs and see if can reach it
                         #print('leg',leg)
                         #build chain
+
                         if legsdist[leg]>fuel:
                             # append  port and its reachable chain into database about a rounte dictionary as finished building chain due to rest arenot reachable
                              # here is where you need append info to the dictionary about a route as are about to leave the  and may also need to update if reach end of loop
                             ##when port == 4  or maxed out about to finish with this route so updat its record
-                            #print('workerlist',listforeachport)
+                            #print('aportssubroute',aportssubroute)
                             #print('entered break')
-                            arouteslistoflists.append(listforeachport)
+                            aroutessubroutecollection.append(aportssubroute)
                             break #stop building the chain when a leg to far is reached
 
-                        else:# else add the next aiport to the chain, then proceed to examine the next leg
-                           # print(cand[k+1])
-                            #info_about[i].append(cand[k + 1])
-
-                            listforeachport.append(route[leg + 1])
-                            #print('oringinal list',route,'could reach so append port to listforeachport',listforeachport)
+                        else:#
+                            aportssubroute.append(route[leg + 1])#append port ahead
+                            #print('oringinal list',route,'could reach so append port to listforeachport',aportssubroute)
                             fuel= fuel - legsdist[leg]
-                            #print('new fuel',fuel)
-                            if leg==4:
-                                arouteslistoflists.append(listforeachport)
 
-                                # todo append  port and its reachable chain into database about a rounte dictionary as finished building chain due to rest arenot reachable
-                                #todo where and how do we update database before we leave loop port:its reachable list
-                                ##todo when port == 4  or maxed out about to finish with this route so updat its record
+                            if leg==4:
+                                aroutessubroutecollection.append(aportssubroute)
                                 break ##donot need this break but good to highlight logic
 
+                self.inrange[routenumber]=aroutessubroutecollection
 
-                    newdictionary_routenumber_listoflistforallitsports[routenumber]=arouteslistoflists
-
-            if routenumber >=24 :  # for five legged journeys
+            if routenumber >= 24:  # for five legged journeys
                 legsdist = Legdistances(route[0], route[1], route[2], route[3], route[4], route[5],route[6]).legslist
-                candidates_legs[routenumber] = legsdist
+                self.candidates_legs[routenumber] = legsdist
                 # print(route)
                 # print('legsdist',legsdist)
+                aportssubroute = []
 
+                for port in range(
+                        6):  # todo for each port on a route build its itinary and store each itinary as an elemment
+                    # print('just to know what route working for route number',routenumber ,route)
 
-                for port in range(6):  #  for each port on a route build its itinary and store each itinary as an elemment
-                    listforeachport = []  # prepare a list to be filled by second members clicks   second loop will add a entry on each of its clicks
+                    # print('at port',route[port])##check port name starting from
+                    # prepare a list to be filled by second members clicks   second loop will add a entry on each of its clicks
+                    # print('fresh list for  to fill',aportssubroute)
+                    # list i in dictionary info_about will store the chain of  airports reachable from ith airport on a fuel tank
                     fuel = maxfuelrange  # from each port can start with full tank
-                    for leg in range(port, 6):  # second loop to fill work list with reachable airportsfor any given port
+                    # print('start fuel',fuel)
+                    aportssubroute = []
+                    for leg in range(port,
+                                     6):  # second loop to fill work list with reachable airportsfor any given port
+                        # print(' at port', route[port]) #for each port will look at successive legs and see if can reach it
+                        # print('leg',leg)
+                        # build chain
+
                         if legsdist[leg] > fuel:
-                            arouteslistoflists.append(listforeachport)
+                            # append  port and its reachable chain into database about a rounte dictionary as finished building chain due to rest arenot reachable
+                            # here is where you need append info to the dictionary about a route as are about to leave the  and may also need to update if reach end of loop
+                            ##when port == 4  or maxed out about to finish with this route so updat its record
+                            # print('aportssubroute',aportssubroute)
+                            # print('entered break')
+                            aroutessubroutecollection.append(aportssubroute)
                             break  # stop building the chain when a leg to far is reached
-                        else:  # else add the next aiport to the chain, then proceed to examine the next leg
-                            listforeachport.append(route[leg + 1])
+
+                        else:  #
+                            aportssubroute.append(route[leg + 1])  # append port ahead
+                            # print('oringinal list',route,'could reach so append port to listforeachport',aportssubroute)
                             fuel = fuel - legsdist[leg]
-                            # print('new fuel',fuel)
+
                             if leg == 5:
-                                arouteslistoflists.append(listforeachport)
+                                aroutessubroutecollection.append(aportssubroute)
                                 break  ##donot need this break but good to highlight logic
-
-                    newdictionary_routenumber_listoflistforallitsports[routenumber] = arouteslistoflists
-
-        #print('for route',self.candidates[0],'at each station can reach following')
-        #print(newdictionary_routenumber_listoflistforallitsports[0])
-        #print('for route', self.candidates[26], 'at each station can reach following')
-        #print(newdictionary_routenumber_listoflistforallitsports[26])
+                self.inrange[routenumber] = aroutessubroutecollection
+               # print('routenumber',routenumber,'route', route) todo
+                #print(self.candidates_legs[routenumber]) todo
+               # print('inrangeport', self.inrange[routenumber]) todo
 
 
-#### TODO HAVE ALL THE INFO I NEED   CANDIDATES,PORTSREACHABLE,PRICES,CANDIDATESLEGS
 
 
-x = Route('TXL', 'SFO', 'DUB', 'LHR', 'TLS', '747')
-# LDE	Tarbes	France
+
+    def cheapest(self):
+
+        cheapestsofar=99999
+        costofroute=999999999999999999999
+        refuelstrategy=''
+        cheapestdistance=0
+
+        for routenumber, route in self.candidates.items():
+            if routenumber < 24:
+                currentfuel=0
+                fueltobuy=0
+                legs = self.candidates_legs[routenumber]
+                subroutes = self.inrange[routenumber]  # a list of subroutes
+                #print('routenumber', routenumber, 'route', route)
+               # print('subroutes for routenumber', routenumber, 'subroutes', subroutes)
+                airports=[Airport(route[0]),Airport(route[1]),Airport(route[2]),Airport(route[3]),Airport(route[4]),Airport(route[5])]
+                #print('airport index 0 airportcode',Airport(route[0]).code)
+                costofthisroute=9999999999999999999
+                fuelstrategyatthisport=[]
+                totaldistance=legs[0]+legs[1]+legs[2]+legs[3]+legs[4]
+               # print('totaldistance',totaldistance)
+                accumulated_distance=0
+                distanceleft=totaldistance
+                fuelboughtatthisroute=0
+               # print('entering subroutes')
+                distancetravelled=0
+                fuelbought=0
+
+                #as you visit each port see if you should buy fuel and how much
+               # todo  self.craft.fuel exist use it
+               # print('about to enter  for ateachport in range(5) : line 326')
+                for ateachport in range(5) :#load in a given ports subroute nb ateachport is the index of port in mainroute and first port ahead of it is ateachport+1
+
+                    subroute=subroutes[ateachport]##gets a list pulls a list from subroutes
+                    if ateachport==0:
+                        fuelused=0
+                        distanceleft = totaldistance - distancetravelled
+
+                    else:
+                        fuelused=legs[ateachport-1]
+                        distancetravelled+=legs[ateachport-1]
+                        currentfuel-=fuelused
+                        distanceleft=totaldistance-distancetravelled
+                    #print('portindex',ateachport,'subroute',subroute)
+                    fuelboughtatthisport=0
+                    startleg=ateachport
+                    indexofcheapest=ateachport
+                    cheapestrate = airports[ateachport].currencyeurorate
+                    legidforcheapest=startleg
+
+
+                   # print('about to enter     for idx2,aheadports in enumerate(subroute): ')
+                    for idx2,aheadports in enumerate(subroute):
+                        distancetocheapest=0
+                        ##thisairportindex=ateachport
+
+                        aheadportsindex=ateachport+1+idx2
+                        #print('aheadports indexs',aheadportsindex)
+                        if (airports[aheadportsindex].currencyeurorate <= airports[ateachport].currencyeurorate)and (airports[aheadportsindex].currencyeurorate <= cheapestrate):
+                            indexofcheapest=aheadportsindex
+                            cheapestrate=airports[aheadportsindex].currencyeurorate
+                            legidforcheapest=ateachport+1+idx2
+                   # print('in for x in range ..ateach to indexof cheaper')
+                    for x in range(ateachport,indexofcheapest):
+                        distancetocheapest += legs[x]
+
+
+                   # print('about to enter line 351')
+                    if indexofcheapest==startleg:
+                        if distanceleft< self.craft.range: #top up to reach end
+                            fueltobuy=(cheapestrate)*(distanceleft-currentfuel)
+                            currentfuel=currentfuel+fueltobuy
+                            fuelbought += fueltobuy
+                            break
+
+                        else:
+                            fueltobuy=cheapestrate* (self.craft.range-currentfuel)##top up to max
+                            currentfuel=currentfuel+fueltobuy
+                            fuelbought += fueltobuy
+
+
+                    else:
+
+                        fueltobuy= cheapestrate * (distancetocheapest-currentfuel) #top up to reach a cheap station
+                        currentfuel=currentfuel+fueltobuy
+                        fuelbought+=fueltobuy
+
+                    #print('fuelboughtatthisport so far',fuelboughtatthisport)
+                   # print('about to enter line 370')
+
+                    #print('accumulated distance',accumulated_distance)
+                   # print('distanceletf',distanceleft)
+                #print('about to enter if fuelboughtatthisport< cheapestsofar:  line 374 ')
+                if fuelbought< cheapestsofar:
+                    cheapestsofar=fuelbought
+                    cheapestroute=routenumber
+                    cheapestdistance=totaldistance
+
+            if routenumber >= 24:
+                currentfuel = 0
+                fueltobuy = 0
+                legs = self.candidates_legs[routenumber]
+                subroutes = self.inrange[routenumber]  # a list of subroutes
+                # print('routenumber', routenumber, 'route', route)
+                # print('subroutes for routenumber', routenumber, 'subroutes', subroutes)
+                airports = [Airport(route[0]), Airport(route[1]), Airport(route[2]), Airport(route[3]),
+                            Airport(route[4]), Airport(route[5]),Airport(route[6])]
+                # print('airport index 0 airportcode',Airport(route[0]).code)
+                costofthisroute = 9999999999999999999
+                fuelstrategyatthisport = []
+                totaldistance = legs[0] + legs[1] + legs[2] + legs[3] + legs[4]+ legs[5]
+               # print('totaldistance', totaldistance)
+                accumulated_distance = 0
+                distanceleft = totaldistance
+                fuelboughtatthisroute = 0
+               # print('entering subroutes')
+                distancetravelled = 0
+                fuelbought = 0
+
+                # as you visit each port see if you should buy fuel and how much
+                # todo  self.craft.fuel exist use it
+               # print('about to enter  for ateachport in range(5) : line 326')
+                for ateachport in range(
+                        6):  # load in a given ports subroute nb ateachport is the index of port in mainroute and first port ahead of it is ateachport+1
+
+                    subroute = subroutes[ateachport]  ##gets a list pulls a list from subroutes
+                    if ateachport == 0:
+                        fuelused = 0
+                        distanceleft = totaldistance - distancetravelled
+
+                    else:
+                        fuelused = legs[ateachport - 1]
+                        distancetravelled += legs[ateachport - 1]
+                        currentfuel -= fuelused
+                        distanceleft = totaldistance - distancetravelled
+                    # print('portindex',ateachport,'subroute',subroute)
+                    fuelboughtatthisport = 0
+                    startleg = ateachport
+                    indexofcheapest = ateachport
+                    cheapestrate = airports[ateachport].currencyeurorate
+                    legidforcheapest = startleg
+
+                   # print('about to enter     for idx2,aheadports in enumerate(subroute): ')
+                    for idx2, aheadports in enumerate(subroute):
+                        distancetocheapest = 0
+                        ##thisairportindex=ateachport
+
+                        aheadportsindex = ateachport + 1 + idx2
+                       # print('aheadports indexs', aheadportsindex)
+                        if (airports[aheadportsindex].currencyeurorate <= airports[ateachport].currencyeurorate) and (
+                            airports[aheadportsindex].currencyeurorate <= cheapestrate):
+                            indexofcheapest = aheadportsindex
+                            cheapestrate = airports[aheadportsindex].currencyeurorate
+                            legidforcheapest = ateachport + 1 + idx2
+                    #print('in for x in range ..ateach to indexof cheaper')
+                    for x in range(ateachport, indexofcheapest):  # todo add 1 or subtract 1
+                        distancetocheapest += legs[x]
+
+
+                    if indexofcheapest == startleg:
+                        if distanceleft < self.craft.range:  # top up to reach end
+                            fueltobuy = (cheapestrate) * (distanceleft - currentfuel)
+                            currentfuel = currentfuel + fueltobuy
+                            fuelbought += fueltobuy
+                            break
+
+                        else:
+                            fueltobuy = cheapestrate * (self.craft.range - currentfuel)  ##top up to max
+                            currentfuel = currentfuel + fueltobuy
+                            fuelbought += fueltobuy
+
+
+                    else:
+
+                        fueltobuy = cheapestrate * (distancetocheapest - currentfuel)  # top up to reach a cheap station
+                        currentfuel = currentfuel + fueltobuy
+                        fuelbought += fueltobuy
+
+                        # print('fuelboughtatthisport so far',fuelboughtatthisport)
+                        # print('about to enter line 370')
+
+                        # print('accumulated distance',accumulated_distance)
+                        # print('distanceletf',distanceleft)
+                # print('about to enter if fuelboughtatthisport< cheapestsofar:  line 374 ')
+                if fuelbought < cheapestsofar:
+                    cheapestsofar = fuelbought
+                    cheapestroute = routenumber
+                    cheapestdistance = totaldistance
+        print('cheapestsofar',cheapestsofar)
+        print('cheapestroutenumber',cheapestroute)
+        print('cheapest distance',cheapestdistance)
+        print('cheapest route',self.candidates[cheapestroute])
+
+x = Route('BUS', 'TUF', 'DUB', 'LHR', 'AOC', '747')
+
+
+                # LDE	Tarbes	France
 # TLS	Toulouse	France
 # TUF	Tours	France
 # BUS	Batumi	Georgia
@@ -212,17 +421,7 @@ x = Route('TXL', 'SFO', 'DUB', 'LHR', 'TLS', '747')
 # SXF	Berlin	Germany
 # TXL	Berlin	Germany
 # BWE
-# print(x.candidates)
 
-
-        # dist2home = self.routedist
-        # for index, airport in enumerate(self.portlist): ##go through airport and build a set of reachable ports
-        #
-        #     legreach=0
-        #     portsinrange={}
-        #     RANGE=craft.range ###########################################################TODO##############
-        #     for i in range(index:6):
-        #     totallegdist=leg
 
 
 
