@@ -221,6 +221,8 @@ class Route:
         costofroute=999999999999999999999
         refuelstrategy=''
         cheapestdistance=0
+        cheapestroutelist=[]
+        costofcheapest=9999999999999999999
 
         for routenumber, route in self.candidates.items():
             if routenumber < 24:
@@ -242,6 +244,7 @@ class Route:
                # print('entering subroutes')
                 distancetravelled=0
                 fuelbought=0
+
 
                 #as you visit each port see if you should buy fuel and how much
                # todo  self.craft.fuel exist use it
@@ -288,7 +291,7 @@ class Route:
                             fueltobuy=(cheapestrate)*(distanceleft-currentfuel)
                             currentfuel=currentfuel+fueltobuy
                             fuelbought += fueltobuy
-                            break
+
 
                         else:
                             fueltobuy=cheapestrate* (self.craft.range-currentfuel)##top up to max
@@ -312,6 +315,9 @@ class Route:
                     cheapestsofar=fuelbought
                     cheapestroute=routenumber
                     cheapestdistance=totaldistance
+                    cheapestroutelist=route
+                    costofcheapest=fuelbought
+
 
             if routenumber >= 24:
                 currentfuel = 0
@@ -379,7 +385,7 @@ class Route:
                             fueltobuy = (cheapestrate) * (distanceleft - currentfuel)
                             currentfuel = currentfuel + fueltobuy
                             fuelbought += fueltobuy
-                            break
+
 
                         else:
                             fueltobuy = cheapestrate * (self.craft.range - currentfuel)  ##top up to max
@@ -403,13 +409,15 @@ class Route:
                     cheapestsofar = fuelbought
                     cheapestroute = routenumber
                     cheapestdistance = totaldistance
+                    cheapestroutelist=route
+                    costofcheapest = fuelbought
         print('cheapestsofar',cheapestsofar)
         print('cheapestroutenumber',cheapestroute)
         print('cheapest distance',cheapestdistance)
-        print('cheapest route',self.candidates[cheapestroute])
+        print('cheapest route',cheapestroutelist)
+x = Route('BUS', 'DUB', 'AOC', 'LHR', 'TUF', '747')
 
-x = Route('BUS', 'TUF', 'DUB', 'LHR', 'AOC', '747')
-
+Y = Route('BUS', 'DUB', 'LHR', 'AOC', 'TUF', '747')
 
                 # LDE	Tarbes	France
 # TLS	Toulouse	France
