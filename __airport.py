@@ -1,4 +1,7 @@
-##airport.py
+#airport.py
+##version 1.0
+###Author Austin Kelly
+####This module creates airport objects using the details form the csv file read in the getdetails method. It also endows  airport objects with properties regarding the local currency
 import csv
 from currencyrate import *
 from countrycurrency import *
@@ -31,7 +34,7 @@ class Airport:
 
 
 def main():
-    x = Airport('BHR')
+    x = Airport('TUF')
     print(x.longitude)
     print(x.code)
     print(x.latitude)

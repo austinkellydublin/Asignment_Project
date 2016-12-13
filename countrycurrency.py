@@ -1,4 +1,7 @@
 #countrycurrency
+#version 1.0
+###Author Austin Kelly
+#### this module uses a magic named csv file to populate corresponding fields of a countrycurrency object
 import csv
 
 class Countrycurrency:
@@ -31,9 +34,8 @@ class Countrycurrency:
 
 def main():
     x= Countrycurrency('Australia')
-
-
     print(x.currencycode)
 
-main()
+if __name__ == '__main__':
+    main()
 

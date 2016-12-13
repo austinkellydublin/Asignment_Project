@@ -228,25 +228,129 @@ class Route:
 
         cheapestsofar=999999999999999
         costofroute=999999999999999999999
+        refuelstrategy=''
         cheapestdistance=0
         cheapestroutelist=[]
         costofcheapest=9999999999999999999
         self.fuelstrategy=[]
-        self.purchase_strategy=[]
-
 
         for routenumber, route in self.candidates.items():
+            # if routenumber < 24:
+            #     currentfuel=0
+            #     fueltobuy=0
+            #     legs = self.candidates_legs[routenumber]
+            #     subroutes = self.inrange[routenumber]  # a list of subroutes
+            #     #print('routenumber', routenumber, 'route', route)
+            #    # print('subroutes for routenumber', routenumber, 'subroutes', subroutes)
+            #     airports=[Airport(route[0]),Airport(route[1]),Airport(route[2]),Airport(route[3]),Airport(route[4]),Airport(route[5])]
+            #     #print('airport index 0 airportcode',Airport(route[0]).code)
+            #     costofthisroute=9999999999999999999
+            #     fuelstrategyatthisport=[]
+            #     totaldistance=legs[0]+legs[1]+legs[2]+legs[3]+legs[4]
+            #    # print('totaldistance',totaldistance)
+            #     accumulated_distance=0
+            #     distanceleft=totaldistance
+            #     fuelboughtatthisroute=0
+            #    # print('entering subroutes')
+            #     distancetravelled=0
+            #     fuelbought=0
+            #
+            #
+            #     #as you visit each port see if you should buy fuel and how much
+            #    # todo  self.craft.fuel exist use it
+            #    # print('about to enter  for ateachport in range(5) : line 326')
+            #     for ateachport in range(5) :#load in a given ports subroute nb ateachport is the index of port in mainroute and first port ahead of it is ateachport+1
+            #
+            #         subroute=subroutes[ateachport]##gets a list pulls a list from subroutes
+            #         if ateachport==0:
+            #             fuelused=0
+            #             distanceleft = totaldistance - distancetravelled
+            #
+            #         else:
+            #             fuelused=legs[ateachport-1]
+            #             distancetravelled+=legs[ateachport-1]
+            #             currentfuel-=fuelused
+            #             distanceleft=totaldistance-distancetravelled
+            #         #print('portindex',ateachport,'subroute',subroute)
+            #         fuelboughtatthisport=0
+            #         startleg=ateachport
+            #         indexofcheapest=ateachport
+            #         cheapestrate = airports[ateachport].currencyeurorate
+            #         legidforcheapest=startleg
+            #
+            #
+            #        # print('about to enter     for idx2,aheadports in enumerate(subroute): ')
+            #         for idx2,aheadports in enumerate(subroute):
+            #             distancetocheapest=0
+            #             ##thisairportindex=ateachport
+            #
+            #             aheadportsindex=ateachport+1+idx2#derive the  index of ports
+            #             #print('aheadports indexs',aheadportsindex)
+            #             if (airports[aheadportsindex].currencyeurorate <= airports[ateachport].currencyeurorate)and (airports[aheadportsindex].currencyeurorate <= cheapestrate):
+            #                 indexofcheapest=aheadportsindex
+            #                 cheapestrate=airports[aheadportsindex].currencyeurorate
+            #                 legidforcheapest=ateachport+1+idx2
+            #        # print('in for x in range ..ateach to indexof cheaper')
+            #         for x in range(ateachport,indexofcheapest):
+            #             distancetocheapest += legs[x]
+            #
+            #
+            #        # print('about to enter line 351')
+            #         if indexofcheapest==startleg:
+            #             if distanceleft< self.craft.range: #top up to reach end
+            #                 fueltobuy=(cheapestrate)*(distanceleft-currentfuel)
+            #                 currentfuel=currentfuel+fueltobuy
+            #                 fuelbought += fueltobuy
+            #                 if ateachport == 0:
+            #                     self.fuelstrategy = [fueltobuy]
+            #                 else:
+            #                     self.fuelstrategy = self.fuelstrategy + [fueltobuy]
+            #
+            #
+            #             else:
+            #                 fueltobuy=cheapestrate* (self.craft.range-currentfuel)##top up to max
+            #                 currentfuel=currentfuel+fueltobuy
+            #                 fuelbought += fueltobuy
+            #                 if ateachport == 0:
+            #                     self.fuelstrategy = [fueltobuy]
+            #                 else:
+            #                     self.fuelstrategy = self.fuelstrategy + [fueltobuy]
+            #
+            #
+            #         else:
+            #
+            #             fueltobuy= cheapestrate * (distancetocheapest-currentfuel) #top up to reach a cheap station
+            #             currentfuel=currentfuel+fueltobuy
+            #             fuelbought+=fueltobuy
+            #             if ateachport==0:
+            #                 self.fuelstrategy=[fueltobuy]
+            #             else:
+            #                 self.fuelstrategy= self.fuelstrategy + [fueltobuy]
+            #
+            #
+            #         #print('fuelboughtatthisport so far',fuelboughtatthisport)
+            #        # print('about to enter line 370')
+            #
+            #         #print('accumulated distance',accumulated_distance)
+            #        # print('distanceletf',distanceleft)
+            #     #print('about to enter if fuelboughtatthisport< cheapestsofar:  line 374 ')
+            #     if fuelbought< cheapestsofar:
+            #         cheapestsofar=fuelbought
+            #         cheapestroute=routenumber
+            #         self.cheapest_distance=totaldistance
+            #         cheapestroutelist=route
+            #         costofcheapest=fuelbought
+            #         self.cheapestlegs = legs
+            #         self.cheapest_cost = int(cheapestsofar)
+            #         self.cheapest_route = cheapestroutelist
 
 
 
-
-            if routenumber >= 24:  ##for routes with six legs
+            if routenumber >= 24:  ##for routes with five legs
                 ##set up some worker variables used later
                 currentfuel = 0
                 fueltobuy = 0
-                fuelstrategy=[]
-                purchase_strategy=[]
-                legs = self.candidates_legs[routenumber]  ##generate the six legs list
+                legs = self.candidates_legs[routenumber]  ##generate the five legs list
                 subroutes = self.inrange[routenumber]  # a list of subroutes for each port stopped at en route
                 # print('routenumber', routenumber, 'route', route)
                 # print('subroutes for routenumber', routenumber, 'subroutes', subroutes)
@@ -263,9 +367,7 @@ class Route:
                 # print('entering subroutes')
                 distancetravelled = 0
                 costfuelbought = 0
-                costtobuy = 0
-
-                ## todo
+                costtobuy = 0  ## todo
 
                 # as you visit each port see if you should buy fuel and how much
                 # todo  self.craft.fuel exist use it
@@ -294,7 +396,7 @@ class Route:
                     ##tood# print('about to enter     for idx2,aheadports in enumerate(subroute): ')
                     for idx2, aheadports in enumerate(subroute):  ## see if there is a cheaper port ahead within range
                         distancetocheaper = 0  ##will buy fuel to get to cheaper port
-
+                        ##TODO DELETE
 
                         aheadportsindex = stopped_at_port + 1 + idx2  ##get the proper index of a port in subroute
                         # print('aheadports indexs', aheadportsindex)
@@ -316,22 +418,18 @@ class Route:
                             currentfuel = currentfuel + fueltobuy
                             costfuelbought += costtobuy
                             if stopped_at_port == 0:
-                                fuelstrategy = [fueltobuy]
-                                purchase_strategy=[costtobuy]
+                                self.fuelstrategy = [fueltobuy]
                             else:
-                                fuelstrategy = fuelstrategy + [fueltobuy]
-                                purchase_strategy= purchase_strategy + [costtobuy]
+                                self.fuelstrategy = self.fuelstrategy + [fueltobuy]
                         else:  ##distanceleft  >range   yet current is cheapest in range so max up to range
                             fueltobuy = (self.craft.range - currentfuel)  ##top up to max
                             costtobuy = (airports[stopped_at_port].currencyeurorate) * (fueltobuy)
                             currentfuel = currentfuel + fueltobuy
                             if stopped_at_port == 0:
-                                fuelstrategy = [fueltobuy]
-                                purchase_strategy = [costtobuy]
-                            else:#append fuel and cost to their arrays
-                                fuelstrategy = fuelstrategy + [fueltobuy]
-                                purchase_strategy = purchase_strategy + [costtobuy]
-                    else:  ## there is a cheaper airport in reach to refuel at so compute distance to it and top up to reach it
+                                self.fuelstrategy = [fueltobuy]
+                            else:
+                                self.fuelstrategy = self.fuelstrategy + [fueltobuy]
+                    else:  ## there is a cheaper airport in reach to fuel at so compute distance to it and top up to reach it
                         for x in range(stopped_at_port, indexofcheaper+1):
                             distancetocheaper += legs[x]
                         fueltobuy = distancetocheaper - currentfuel
@@ -339,137 +437,22 @@ class Route:
                         currentfuel = currentfuel + fueltobuy
                         costfuelbought += costtobuy
                         if stopped_at_port == 0:
-                            fuelstrategy = [fueltobuy]
-                            purchase_strategy = [costtobuy]
+                            self.fuelstrategy = [fueltobuy]
                         else:
-                            fuelstrategy = fuelstrategy + [fueltobuy]
-                            purchase_strategy = purchase_strategy + [costtobuy]
+                            self.fuelstrategy = self.fuelstrategy + [fueltobuy]
 
                 if costfuelbought < cheapestsofar:
                     cheapestsofar = costfuelbought
                     cheapestroute = routenumber
                     self.cheapest_distance = totaldistance
                     cheapestroutelist = route
-                    self.costofcheapest = costfuelbought
+                    costofcheapest = costfuelbought
                     self.cheapestlegs = legs
                     self.cheapest_cost = int(cheapestsofar)
                     self.cheapest_route = cheapestroutelist
-                    self.fuelstrategy =fuelstrategy
-                    self.purchase_strategy = [int(x) for x in purchase_strategy]
-            if routenumber < 24:##for routes with five legs
-                ##set up some worker variables used later
-                purchase_strategy=[]
-                fuelstrategy=[]
-                currentfuel = 0
-                fueltobuy = 0
-                legs = self.candidates_legs[routenumber] ##generate the five legs list
-                subroutes = self.inrange[routenumber]  # a list of subroutes for each port stopped at en route
-                # print('routenumber', routenumber, 'route', route)
-                # print('subroutes for routenumber', routenumber, 'subroutes', subroutes)
-                airports = [Airport(route[0]), Airport(route[1]), Airport(route[2]), Airport(route[3]),
-                            Airport(route[4]), Airport(route[5])]
-                # print('airport index 0 airportcode',Airport(route[0]).code)
-                costofthisroute = 9999999999999999999
-                fuelstrategyatthisport = []
-                totaldistance = legs[0] + legs[1] + legs[2] + legs[3] + legs[4]
-                # print('totaldistance', totaldistance)
-                accumulated_distance = 0
-                distanceleft = totaldistance
-                fuelboughtatthisroute = 0
-                # print('entering subroutes')
-                distancetravelled = 0
-                costfuelbought = 0
-                costtobuy=0## todo
 
-                # as you visit each port see if you should buy fuel and how much
-                # print('about to enter  for ateachport in range(5) : line 326')
-                for stopped_at_port in range( 5):  # load in a given ports subroute nb ateachport is the index of port in
-                    #  mainroute and first port ahead of it is ateachport+1
-                    subroute = subroutes[stopped_at_port]  ##load subroute in range for a stopped at port
-                    if stopped_at_port == 0:##at initial port
-                        fuelused = 0
-                        distanceleft = totaldistance
 
-                    else:
-                        fuelused = legs[stopped_at_port - 1]##fuel used is fuel travelling from last port
-                        distancetravelled += legs[stopped_at_port - 1] ## distanced travelled
-                        currentfuel -= fuelused
-                        distanceleft = totaldistance - distancetravelled
-                    # print('portindex',ateachport,'subroute',subroute)
-                    fuelboughtatthisport = 0
-                    ##initialize so variables for each iteration
-                    startleg = stopped_at_port  ##first leg index on subroutes is the same as the index of stopped at port
-                    indexofcheaper = stopped_at_port  ##initially set cheapest port in the subroute to BE the stopped at port until find otherwise
-                    cheapestrate = airports[
-                        stopped_at_port].currencyeurorate  ## initially set cheapest rate in the subroute to the stopped at ports
 
-                    # print('about to enter     for idx2,aheadports in enumerate(subroute): ')
-                    for idx2, aheadports in enumerate(subroute):## see if there is a cheaper port ahead within range
-                       # print('subroute',subroute)
-                       # print('current stopped at airport index',stopped_at_port,'go in through idx loop line395  idx2 = ',idx2 )
-                        distancetocheaper = 0##will buy fuel to get to cheaper port
-                        aheadportsindex = stopped_at_port + 1 + idx2  ##get the proper index of a port in subroute
-                       # print('ahead airport index ',aheadportsindex,'aheadairport name',aheadports)
-                        #print('aheadports indexs', aheadportsindex)
-                        if (airports[aheadportsindex].currencyeurorate <= cheapestrate):  ##find next cheapest airport as will buy enough fuel to get to it
-                            indexofcheaper = aheadportsindex  # reset to index of cheapest port
-                            cheapestrate = airports[aheadportsindex].currencyeurorate
-                            break
-                           # print('at airport',stopped_at_port,'but cheaper airport at index',aheadportsindex)
-
-                        else:
-                            pass
-                            # reset to index of cheapest port
-                            # legidforcheapest = stopped_at_port + 1 + idx2
-                    # print('in for x in range ..ateach to indexof cheaper')
-                    if stopped_at_port == indexofcheaper:##current aiport is cheapest in range so fill up to get home or max up
-                        if distanceleft <= self.craft.range:
-                            fueltobuy = distanceleft - currentfuel
-                            costtobuy = (airports[stopped_at_port].currencyeurorate) * (fueltobuy)
-                            fueltobuy = distanceleft - currentfuel
-                            currentfuel = currentfuel + fueltobuy
-                            costfuelbought += costtobuy
-                            if stopped_at_port == 0:
-                                fuelstrategy = [fueltobuy]
-                                purchase_strategy = [costtobuy]
-                            else:
-                                fuelstrategy = fuelstrategy + [fueltobuy]
-                                purchase_strategy = purchase_strategy + [costtobuy]
-
-                        else: ##distance left  greater than fuel tank range   yet current airport is cheapest in range so max up to range
-                            fueltobuy = (self.craft.range - currentfuel)  ##top up to max
-                            costtobuy = (airports[stopped_at_port].currencyeurorate) * (fueltobuy)
-                            currentfuel = currentfuel + fueltobuy
-                            if stopped_at_port == 0:
-                                fuelstrategy = [fueltobuy]
-                                purchase_strategy = purchase_strategy + [costtobuy]
-                            else:
-                                fuelstrategy = fuelstrategy + [fueltobuy]
-                                purchase_strategy = purchase_strategy + [costtobuy]
-                    else:## there is a cheaper airport in reach do fuel so compute distance to it and top up to reach it
-                        for x in range(stopped_at_port,indexofcheaper+1):
-                            distancetocheaper += legs[x]
-                        fueltobuy = distancetocheaper -currentfuel
-                        costtobuy = (airports[stopped_at_port].currencyeurorate) * (fueltobuy)
-                        currentfuel = currentfuel + fueltobuy
-                        costfuelbought += costtobuy
-                        if stopped_at_port == 0:
-                            fuelstrategy = [fueltobuy]
-                            purchase_strategy = purchase_strategy + [costtobuy]
-                        else:
-                            fuelstrategy = fuelstrategy + [fueltobuy]
-                            purchase_strategy = purchase_strategy + [costtobuy]
-                if costfuelbought < cheapestsofar:
-                    cheapestsofar = costfuelbought
-                    cheapestroute = routenumber
-                    self.cheapest_distance = totaldistance
-                    cheapestroutelist = route
-                    self.costofcheapest = costfuelbought
-                    self.cheapestlegs = legs
-                    self.cheapest_cost = int(cheapestsofar)
-                    self.cheapest_route = cheapestroutelist
-                    self.fuelstrategy = fuelstrategy
-                    self.purchase_strategy = [int(x) for x in purchase_strategy]
 
 def main():
     #uncomment to check different starting permutations of same route to check consistency of algorithm
@@ -481,8 +464,6 @@ def main():
     print('route distance',z.cheapest_distance)
     print('fuel to buy strategy',z.fuelstrategy)
     print('cheapest legs',z.cheapestlegs)
-    print('purchase strategy',z.purchase_strategy)
-    print('self.costofcheapest',self.costofcheapest)
 
 if __name__ == '__main__':
     main()

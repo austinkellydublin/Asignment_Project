@@ -1,4 +1,7 @@
 ##aircraft.py
+#version 1.0
+###Author Austin Kelly
+
 import csv
 
 class Aircraft:

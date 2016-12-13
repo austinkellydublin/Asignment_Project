@@ -1,4 +1,7 @@
 #calculatedistance
+#version 1.0
+###Author Austin Kelly
+
 import math
 
 class Calcdistance:
@@ -44,6 +47,11 @@ class Calcdistance:
         rads = degrees * (2 * math.pi) / 360
         return rads
 
-        #  print(calcdist(-6.270075,53.421333,151.177222,-33.946111))
+
+def main():
+    x=Calcdistance(-6.270075,53.421333,151.177222,-33.946111)
+    print(x.distance)
 
 
+if __name__=='__main__':
+    main()
