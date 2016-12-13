@@ -301,7 +301,6 @@ class Route:
                         if  (airports[aheadportsindex].currencyeurorate <= cheapestrate):  ##find next cheapest airport as will buy enough fuel to get to it
                             indexofcheaper = aheadportsindex  # reset to index of cheapest port
                             cheapestrate = airports[aheadportsindex].currencyeurorate
-
                             break
                         else:
                             pass
@@ -309,7 +308,7 @@ class Route:
                             # reset to index of cheapest port
                             # legidforcheapest = stopped_at_port + 1 + idx2
                     # print('in for x in range ..ateach to indexof cheaper')
-                    if stopped_at_port == indexofcheaper:
+                    if stopped_at_port == indexofcheaper:##there is no cheaper airport in range
                         if distanceleft <= self.craft.range:
                             fueltobuy = distanceleft - currentfuel
                             costtobuy = (airports[stopped_at_port].currencyeurorate) * (fueltobuy)
@@ -331,7 +330,7 @@ class Route:
                             else:#append fuel and cost to their arrays
                                 fuelstrategy = fuelstrategy + [fueltobuy]
                                 purchase_strategy = purchase_strategy + [costtobuy]
-                    else:  ## there is a cheaper airport in reach to refuel at so compute distance to it and top up to reach it
+                    else:  ## there is a cheaper airport in reach so refuel at, so compute distance to it and top up to reach it
                         for x in range(stopped_at_port, indexofcheaper+1):
                             distancetocheaper += legs[x]
                         fueltobuy = distancetocheaper - currentfuel

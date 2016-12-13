@@ -14,12 +14,13 @@ class Airport:
             rows = csv.reader(f)
             lista = list(rows)
             # print(keys)
-            for row in lista[:]:  # create an object
+            for row in lista[:]:  # cycle throw airports and locate airport details
                 airportobject = {keys[0]: row[0], keys[1]: row[1], keys[2]: row[2], keys[3]: row[3],
                             keys[4]: row[4],keys[5]: row[5], keys[6]: row[6], keys[7]: row[7], keys[8]: row[8],
                             keys[9]: row[9],keys[10]: row[10], keys[11]: row[11]}  # add object to lib with its model as key
                 if airportobject['code'] == self.code:
                     self.details = airportobject
+                #self.details=airportobject
 
     def __init__(self,code):
         self.code = code
@@ -29,6 +30,7 @@ class Airport:
         self.country = self.details['country']
         self.currency = Countrycurrency(self.details['country']).currencycode
         self.currencyeurorate= float(Currencyrate(self.currency).toeuro)
+        self.getdetails()
 
 
 
