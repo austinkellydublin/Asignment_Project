@@ -482,7 +482,7 @@ def main():
     print('fuel to buy strategy',z.fuelstrategy)
     print('cheapest legs',z.cheapestlegs)
     print('purchase strategy',z.purchase_strategy)
-    print('self.costofcheapest',self.costofcheapest)
+    print('self.costofcheapest',z.costofcheapest)
 
 if __name__ == '__main__':
     main()
