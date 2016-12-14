@@ -54,5 +54,7 @@ class Legdistances():##main class to calculate distances in each stage of a jour
 
 def main():
     x = Legdistances('SXR', 'TNI', 'AGX', 'BLR', 'YYU','SXR','TNI')
+    print(x.legslist)
+    print(x.routedist)
 if __name__ == '__main__':
     main()

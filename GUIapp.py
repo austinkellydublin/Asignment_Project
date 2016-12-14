@@ -5,6 +5,30 @@
 
 
 from tkinter import *
+from route import*
+
+def runapp():
+
+    port1 = str(portvar1.get())
+    port2 = str(portvar2.get())
+    port3 = str(portvar3.get())
+    port4 = str(portvar4.get())
+    port5 = str(portvar5.get())
+    aircraft = str(craftvar6.get())
+    label7.configure(text= str(Route(port1,port2,port3,port4,port5,aircraft).cheapest_route))
+
+def clearfields():
+    portvar1.set('')
+    portvar2.set('')
+    portvar3.set('')
+    portvar4.set('')
+    portvar5.set('')
+    craftvar6.set('')
+    label7.configure(text='          THE RESULTS WILL APPEAR HERE          ')
+
+
+
+
 
 window=Tk()##create main window object
 window.title('Best Route program Augustine Kelly D16124897')##add title to window
@@ -39,20 +63,20 @@ frame8.pack()
 
 
 
-# portvar1=StringVar()#create the data objects
-# portvar2=StringVar()
-# portvar3=StringVar()
-# portvar4=StringVar()
-# portvar5=StringVar()
-# craftvar6=StringVar()
+portvar1=StringVar()#create the data objects
+portvar2=StringVar()
+portvar3=StringVar()
+portvar4=StringVar()
+portvar5=StringVar()
+craftvar6=StringVar()
 
 
-portentry1=Entry(frame1)#create the entry/input boxes
-portentry2=Entry(frame2)
-portentry3=Entry(frame3)
-portentry4=Entry(frame4)
-portentry5=Entry(frame5)
-craftentry6=Entry(frame6)
+portentry1=Entry(frame1,textvariable=portvar1)#create the entry/input boxes todo use portentry1.get() to retrieve value in function and v.set to reset it to clear''
+portentry2=Entry(frame2,textvariable=portvar2)
+portentry3=Entry(frame3,textvariable=portvar3)
+portentry4=Entry(frame4,textvariable=portvar4)###
+portentry5=Entry(frame5,textvariable=portvar5)
+craftentry6=Entry(frame6,textvariable=craftvar6)
 portentry1.pack(side=RIGHT)
 portentry2.pack(side=RIGHT)
 portentry3.pack(side=RIGHT)
@@ -79,28 +103,17 @@ label5.pack(side=LEFT)
 label6.pack(side=LEFT)
 label7.pack()
 
-# label11=Label(frame1,relief='groove',text='results will appear here')
-# label21=Label(frame2,relief='groove',text='results will appear here')
-# label31=Label(frame3,relief='groove',text='results will appear here')
-# label41=Label(frame4,relief='groove',text='results will appear here')
-# label51=Label(frame5,relief='groove',text='results will appear here')
-# label61=Label(frame6,relief='groove',text='results will appear here')
-# label11.pack(pady=10)
-# label21.pack(pady=10)
-# label31.pack(pady=10)
-# label41.pack(pady=10)
-# label51.pack(pady=10)
-# label61.pack(pady=10)
 
 
 
 button_run=Button(frame8,text='       RUN       ')
-button_exit=Button(frame8,text='       CLEAR       ')
+button_clear=Button(frame8,text='       CLEAR       ')
 button_run.pack(side=LEFT,padx=20,pady=5)
-button_exit.pack(side=RIGHT,padx=20,pady=5)
+button_clear.pack(side=RIGHT,padx=20,pady=5)
+button_run.configure(command=runapp)
+button_clear.configure(command=clearfields)
 
-
-
+window.resizable(0,0)
 window.mainloop()
 
 
