@@ -1,30 +1,46 @@
 #bestrouteapp.py
 #version 1.0
 ###Author Austin Kelly
-####this module provides a GUI interface for the bestroute application
+'''this module provides a GUI interface for the bestroute application and leverages  tkinter which is a wrapper around tlc'''
+
 
 
 from tkinter import *
 from route import*
+from logerrors import *
 
-def runapp():
+def runapp():##this is the main function that calls the route module to calculate the best route
+    try:
+        port1 = str(portvar1.get())
+        port2 = str(portvar2.get())
+        port3 = str(portvar3.get())
+        port4 = str(portvar4.get())
+        port5 = str(portvar5.get())
+        aircraft = str(craftvar6.get())
+        try:
+            bestroute=Route(port1,port2,port3,port4,port5,aircraft).cheapest_route
+        except:
+            Logerrors('An error occured in GUIapp whilst calling Route constructor with parameters supplied ')
+        texta=''
+        for x in bestroute:
+            texta= str(x) + ' , '
+        textb= texta
 
-    port1 = str(portvar1.get())
-    port2 = str(portvar2.get())
-    port3 = str(portvar3.get())
-    port4 = str(portvar4.get())
-    port5 = str(portvar5.get())
-    aircraft = str(craftvar6.get())
-    label7.configure(text= str(Route(port1,port2,port3,port4,port5,aircraft).cheapest_route))
+        label7.configure(text=  textb)
+    except:
+        label7.configure(fg='red')
+        label7.configure(text='check your input and clear the fields and try again')
 
-def clearfields():
+
+def clearfields():#this function will clear the fields
+    label7.configure(fg='blue')
     portvar1.set('')
     portvar2.set('')
     portvar3.set('')
     portvar4.set('')
     portvar5.set('')
     craftvar6.set('')
-    label7.configure(text='          THE RESULTS WILL APPEAR HERE          ')
+    label7.configure(text='              THE RESULTS WILL APPEAR HERE             ')
 
 
 
@@ -93,7 +109,7 @@ label3=Label(frame3,relief='groove',text='                         Aiport3')
 label4=Label(frame4,relief='groove',text='                         Aiport4')
 label5=Label(frame5,relief='groove',text='                         Aiport5')
 label6=Label(frame6,relief='groove',text='                        Aircraft')
-label7=Label(frame7,relief='groove',text='          THE RESULTS WILL APPEAR HERE          ')
+label7=Label(frame7,relief='groove',text='                       THE RESULTS WILL APPEAR HERE                        ')
 label0.pack(side=TOP)
 label1.pack(side=LEFT)
 label2.pack(side=LEFT)
@@ -102,7 +118,7 @@ label4.pack(side=LEFT)
 label5.pack(side=LEFT)
 label6.pack(side=LEFT)
 label7.pack()
-
+label7.configure(fg='blue')
 
 
 
@@ -113,7 +129,7 @@ button_clear.pack(side=RIGHT,padx=20,pady=5)
 button_run.configure(command=runapp)
 button_clear.configure(command=clearfields)
 
-window.resizable(0,0)
+window.resizable(0,0)##
 window.mainloop()
 
 

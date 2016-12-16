@@ -1,0 +1,40 @@
+Hi there this is a test of the on error code
+
+
+
+ an problem with reading the airports file happened in airport module starting line 18
+
+
+
+ an problem with reading the airports file happened in airport module starting line 18
+
+
+
+an error occurred during processing the currency csv file in currencyrate module
+
+
+
+a problem occured in the importdata module during processing a route csv file
+
+
+
+a problem occured in the importdata module during processing a route csv file
+
+
+
+a problem occured in the importdata module during processing a route csv file
+
+
+
+a problem occured in the importdata module during processing a route csv file
+
+
+
+a problem occured in the importdata module during processing a route csv file
+
+
+
+a problem occured in the importdata module during processing a route csv file
+
+
+
