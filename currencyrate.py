@@ -34,11 +34,17 @@ class Currencyrate:
                 #print(outerdict['AUD'])
         except:Logerrors('an error occurred during processing the currency csv file in currencyrate module')
 def main():
-    ##this contains test code if module run as a standalone script
+    ##this contains test code if module run as a standalone the results should be as below
     x= Currencyrate('AUD')
     print('The currency details for Australia with country code AUD are')
     print('The to euro rate is ',x.toeuro)
     print('the from euro rate is ',x.fromeuro)
+    print('currency rate details',x.currencyratedetails)
 
 if __name__=='__main__':
     main()
+#Results of test should be
+# The currency details for Australia with country code AUD are
+# The to euro rate is  0.7253
+# the from euro rate is  1.3791
+# currency rate details {'toeuro': '0.7253', 'currencyname': 'Australian Dollar', 'fromeuro': '1.3791', 'currencycode': 'AUD'}

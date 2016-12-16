@@ -1,10 +1,12 @@
 ##Terminal_app.py
-#version 1.0
+#version 1.01
 ###Author Austin Kelly
 '''this module presents a command line interface to the user for the app'''
+from cheapest2 import *
+from permroutes import *
 
 
-from route import *
+##from route import *
 
 def main():
     try:## gather input from the user
@@ -31,8 +33,19 @@ def main():
                     main()
             port_idx=port_idx.upper()
         aircraft = input('please input the aircraft model e.g. 747  ; ') # get aircraft from user
-        print('This will take few MINUTES as we have to run alot of permutations, go have a beer and come back in five')
-        print ('The best route is', Route(port1,port2,port3,port4,port5,aircraft).cheapest_route)
+        print('Please wait. This will take few MINUTES as we have to run a lot of permutations')
+        candidates = Permroutes(port1,port2,port3,port4,port5).candidates
+        craft_range = Aircraft(aircraft).range
+        cheapest = Cheapest(candidates, craft_range)
+        print('cheapest route is ',cheapest.cheapest_route)
+
+        print('cheapest cost is ',cheapest.cheapest_cost)
+
+        print('the legs distances are',cheapest.cheapest_legs_distances)
+        print('cheapest distance is ',cheapest.cheapest_distance)
+
+        print('cheapest purchase strategy is ' ,cheapest.cheapest_purchase_strategy)
+        print('cheapest fuel strategey is ',cheapest.cheapest_fuel_strategy)
     except: ## deal with user invalid input
         print('Check your inputs and the make sure the files are all in current directory and complete')
         yesno=input('Would you like to try again? enter YES or NO')

@@ -38,7 +38,7 @@ class Airport:
         except:Logerrors(' an problem with reading the airports file happened in airport module starting line 18')
 
 
-def main():
+def main():##this method test the mmodule it should return the results below
     x = Airport('DUB')
     print('For Dublin airport code DUB')
     print('The longitude is ',x.longitude)
@@ -49,6 +49,14 @@ def main():
     print('The to euro rate for fuel is ',x.currencyeurorate)
 if __name__=='__main__':
     main()
+##RESULTS OF TEST SHOULD BE AS PER BELOW
+# For Dublin airport code DUB
+# The longitude is  -6.270075
+# The code is  DUB
+# The latitude is 53.421333
+# The country is  Ireland
+# The currency is  EUR
+# The to euro rate for fuel is  1.0
 
 
 

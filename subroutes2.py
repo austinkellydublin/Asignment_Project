@@ -1,6 +1,11 @@
-from legdistances import *
+### route
+#version 1.0
+###Author Austin Kelly
+'''this module will generate a list of lists. the lists will represent the ports within flying range of each stop in a route'''
 
-class Subroutes():
+from legdistances import *  ##need this module see when a leg is beyond the remaining fuel's reach
+
+class Subroutes(): # initialize with route as a list and the tank range
     def __init__(self,route,tank_range):
        # print('tank =',tank_range)
         #print('route',route)
@@ -65,7 +70,7 @@ class Subroutes():
                         # print(fuel)
 
                         if leg == 5:
-                            # print('hell3')
+
                             break
                             # if leg == 4:  ##only a five leg journey so done last leg append and break
                             #     break  ##donot need this break but good to highlight logic
@@ -73,17 +78,12 @@ class Subroutes():
                 self.subroutes = masterlist
 
 
-
-
-
-
-
-
-def main():
+def main():##this tests module the results should be as below
     x=Subroutes(['LHR', 'TUF', 'AOC', 'BHX','DUB', 'LHR'],7000)
     y=['LHR', 'TUF', 'AOC', 'BHX', 'BUS', 'DUB', 'LHR']
     print('original route',y)
     print('subroutes reachable on each leg within full tank range are ',x.subroutes)
 if __name__ == '__main__':
     main()
-
+##result of test should be original route ['LHR', 'TUF', 'AOC', 'BHX', 'BUS', 'DUB', 'LHR']
+##subroutes reachable on each leg within full tank range are  [['TUF', 'AOC', 'BHX', 'DUB', 'LHR'], ['AOC', 'BHX', 'DUB', 'LHR'], ['BHX', 'DUB', 'LHR'], ['DUB', 'LHR'], ['LHR']]

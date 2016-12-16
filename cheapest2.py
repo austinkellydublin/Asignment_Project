@@ -1,4 +1,7 @@
-
+### route
+#version 1.01
+###Author Austin Kelly
+''' this moducle will work out the cheapest route for given itinary and stores the results of various features in attributes'''
 from __airport import *
 
 
@@ -7,12 +10,15 @@ from legdistances import *
 from aircraft import *
 from cleanupcandidates import *
 from subroutes2 import*
+from permroutes import *
+
 '''  This module takes in a dictionary of candidate lists and computes the cheapest one of the alternatives and stores it in fields   '''
 
 class Cheapest():
-    def __init__(self,candidates,max_range=7000):
+    def __init__(self,candidates,max_range):##to initialize supple the candidates as a list of strings which are the three letter airport codes in capitals and the range
         #print(candidates)
-        cheapest_so_far=99999999999##a vairable to hold current cheapest price
+        cheapest_so_far=99999999999##a variable to hold current cheapest price
+
         candidates= Cleanup_candidate_routes(candidates,max_range).candidates
 
         for routenumber, route in candidates.items():
@@ -22,7 +28,7 @@ class Cheapest():
             if routenumber < 24: ##for candidate routes with five legs
                 purchase_strategy=[]##initialize some variables to collect information from later processing
                 fuel_strategy=[]
-                cost_fuel_bought = 0#total
+                cost_fuel_bought = 0# a total of the individual
                 distance_travelled = 0
 
                 sub_routes= Subroutes(route,max_range).subroutes #get subroutes for chosen
@@ -40,10 +46,11 @@ class Cheapest():
                 for stopped_at_port in range( 5):#process buying strategy for each airport
 
 
-                    sub_route = sub_routes[stopped_at_port]  #get the stop at ports list of ports within range so can see if cheaper port within range and how far
+                    sub_route = sub_routes[stopped_at_port]  #get the currently stopped at ports list of ports within range so can see if cheaper port within range and how far
                     #check where we are on the itinary
                     if stopped_at_port == 0:## if just setting off
                         distance_left = total_distance
+                        #print('distance left',distance_left)
                         current_fuel=0
 
                     else:
@@ -51,6 +58,9 @@ class Cheapest():
                         distance_travelled += fuel_used ## as a kilomter equates to a litre
                         current_fuel = current_fuel -fuel_used
                         distance_left = total_distance - distance_travelled
+                       # print('distance left',distance_left)
+                        #print('distance travelled',distance_travelled)
+                        #print('fuel used',fuel_used)
 
                     ##first leg index on a given subroute is the same as the index of stopped at port
                     index_of_cheaper = stopped_at_port  ##initially set cheapest port in the subroute to BE the stopped at port until find otherwise
@@ -164,7 +174,7 @@ class Cheapest():
                     for idx2, ahead_ports in enumerate(sub_route):
                         # print('subroute',sub_route)
                         # print('current stopped at airport index',stopped_at_port,'go in through idx loop line395  idx2 = ',idx2 )
-                        ahead_ports_index = (stopped_at_port + 1) + idx2  ##get the proper index of a port
+                        ahead_ports_index = (stopped_at_port+1) + idx2  ##get the proper index of a port
                         # print('ahead airport index ',aheadportsindex,'aheadairport name',aheadports)
                         # print('aheadports indexs', aheadportsindex)
                         if (airports[
@@ -208,7 +218,7 @@ class Cheapest():
                     elif stopped_at_port != index_of_cheaper:  ##stopped at port is not the cheapest so find first cheapest staton and distance to it
                         complete_distance_to_cheaper = 0
                         for x in range(stopped_at_port,
-                                       index_of_cheaper + 1):  ##distance to cheaper is the accumulated leg distances to get to it
+                                       index_of_cheaper):  ##distance to cheaper is the accumulated leg distances to get to it
                             complete_distance_to_cheaper += legs[x]
                             # print('complete_distance_to_cheaper',complete_distance_to_cheaper)
                             # print('airports[stopped_at_port].currencyeurorate',airports[stopped_at_port].currencyeurorate)
@@ -249,7 +259,7 @@ class Cheapest():
 
 
 
-def main():
+def main():##This tests the module the results should appear as below
     candidates = {0: ['LHR', 'DUB', 'BUS', 'AOC', 'TUF', 'LHR'],
               1: ['LHR', 'DUB', 'BUS', 'TUF', 'AOC', 'LHR'],
               2: ['LHR', 'DUB', 'AOC', 'BUS', 'TUF', 'LHR'],
@@ -312,8 +322,22 @@ def main():
               59: ['LHR', 'DUB', 'BUS', 'TUF', 'AOC', 'DUB', 'LHR']}
     range=7000
     x= Cheapest(candidates,range)
-    print(x.cheapest_route)
-    print(x.cheapest_legs_distances)
-    print(x.cheapest_cost)
+    print('the cheapest route is',x.cheapest_route)
+    print('the leg distances are',x.cheapest_legs_distances)
+    print('the cost is',x.cheapest_cost)
+
+    print('the total distance is ', x.cheapest_distance)
+    print('cheapest fuelling strategy', x.cheapest_fuel_strategy)
+    print('cheapest purchase stragegy',x.cheapest_purchase_strategy)
+    print('cheapest route number is',x.cheapest_route_number)
+
+
 if __name__ == '__main__':
     main()
+#test results should be the cheapest route is ['LHR', 'DUB', 'TUF', 'AOC', 'BUS', 'DUB', 'LHR']
+# the leg distances are [448, 829, 940, 2444, 3744, 448]
+# the cost is 4841
+# the total distance is  8853
+# cheapest fuelling strategy [448, 829, 940, 2444]
+# cheapest purchase stragegy [628, 829, 940, 2444]
+#cheapest route number is 47

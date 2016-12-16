@@ -6,8 +6,8 @@
 
 
 from tkinter import *
-from route import*
 from logerrors import *
+from cheapest2 import *
 
 def runapp():##this is the main function that calls the route module to calculate the best route
     try:
@@ -18,7 +18,9 @@ def runapp():##this is the main function that calls the route module to calculat
         port5 = str(portvar5.get())
         aircraft = str(craftvar6.get())
         try:
-            bestroute=Route(port1,port2,port3,port4,port5,aircraft).cheapest_route
+            candidates = Permroutes(port1, port2, port3, port4, port5).candidates
+            craft_range = Aircraft(aircraft).range
+            bestroute= Cheapest(candidates, craft_range).cheapest_route
         except:
             Logerrors('An error occured in GUIapp whilst calling Route constructor with parameters supplied ')
         texta=''
@@ -103,11 +105,11 @@ craftentry6.pack(side=RIGHT)
 imgplane_label=Label(window,image=imgplane)
 
 label0=Label(framea,relief='groove',text='ENTER THE AIRPORTS AND AIRCRAFT BELOW')
-label1=Label(frame1,relief='groove',text='                         Aiport1')
-label2=Label(frame2,relief='groove',text='                         Aiport2')
-label3=Label(frame3,relief='groove',text='                         Aiport3')
-label4=Label(frame4,relief='groove',text='                         Aiport4')
-label5=Label(frame5,relief='groove',text='                         Aiport5')
+label1=Label(frame1,relief='groove',text='                         Airport1')
+label2=Label(frame2,relief='groove',text='                         Airport2')
+label3=Label(frame3,relief='groove',text='                         Ariport3')
+label4=Label(frame4,relief='groove',text='                         Airport4')
+label5=Label(frame5,relief='groove',text='                         Airport5')
 label6=Label(frame6,relief='groove',text='                        Aircraft')
 label7=Label(frame7,relief='groove',text='                       THE RESULTS WILL APPEAR HERE                        ')
 label0.pack(side=TOP)
@@ -129,7 +131,7 @@ button_clear.pack(side=RIGHT,padx=20,pady=5)
 button_run.configure(command=runapp)
 button_clear.configure(command=clearfields)
 
-window.resizable(0,0)##
+window.resizable()##
 window.mainloop()
 
 

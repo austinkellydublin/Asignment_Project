@@ -1,7 +1,7 @@
 ##calculate leg distances
 #version 1.0
 ###Author Austin Kelly
-'''this module calculates the legs distances for a route'''
+'''this module calculates the legs distances for a route it takes the route as seperate string parameters and stores key distance information in its attributes'''
 
 
 from __airport import  *
@@ -17,7 +17,7 @@ class Legdistances():##main class to calculate distances in each stage of a jour
         self.port3 = Airport(port3)
         self.port4 = Airport(port4)
         self.port5 = Airport(port5)
-        self.port6 = Airport(port6)  ## need to reasign these for permutations
+        self.port6 = Airport(port6)
 
         if port7=='!!!':##this is so can use same code base to generate five leg and six leg journeys form our permutations (last leg will be zero in five leg)
             self.port7=self.port6
@@ -50,10 +50,11 @@ class Legdistances():##main class to calculate distances in each stage of a jour
            # print(self.legslist)
            # print(self.routedist)
 
-def main():
+def main(): # this function performs a test on the module it should return results below
     x = Legdistances('SXR', 'TNI', 'AGX', 'BLR', 'YYU','SXR','TNI')
     print('The distances of each leg are ',x.legslist)
     print('The total distance is ',x.routedist)
     x
 if __name__ == '__main__':
     main()
+#test results should return-------- The distances of each leg are  [1201, 1781, 642, 12812, 10472, 1201].....The total distance is  28109
