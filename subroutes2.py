@@ -1,4 +1,3 @@
-
 from legdistances import *
 
 class Subroutes():
@@ -49,11 +48,11 @@ class Subroutes():
                     # print('legdists',legsdist)
                     ## the holding array that stores all the subroute lists
 
-                    masterlist = []  # from each port can fuel up so want to see how many ports can reach on full tank
+                      # from each port can fuel up so want to see how many ports can reach on full tank
                     for port in range(6):  ##at each of the 6 ports
                         # print('start fuel',fuel)
                         fuel = tank_range  ##can refil
-                        aports_subroute = []  ## see who can reach
+                         ## see who can reach
                         for leg in range(port, 7):  # for each leg from a port
                             if (legsdist[leg]) > fuel:
                                 # if next port(legdistance) impossible to reach append subroute and stop building for this port
@@ -144,9 +143,7 @@ def main():
     x=Subroutes(['LHR', 'TUF', 'AOC', 'BHX','DUB', 'LHR'],7000)
     y=['LHR', 'TUF', 'AOC', 'BHX', 'BUS', 'DUB', 'LHR']
     print('original route',y)
-    print('subroutes are ',x.subroutes)
+    print('subroutes reachable on each leg within full tank range are ',x.subroutes)
 if __name__ == '__main__':
     main()
-
-
 

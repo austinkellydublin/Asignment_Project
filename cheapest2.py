@@ -22,10 +22,6 @@ class Cheapest():
             if routenumber < 24:
                 purchase_strategy=[]
                 fuel_strategy=[]
-
-
-                # fuel_to_buy = 0
-                # cost_to_buy = 0
                 cost_fuel_bought = 0#total
 
                 sub_routes= Subroutes(route,max_range).subroutes
@@ -109,13 +105,13 @@ class Cheapest():
                             complete_distance_to_cheaper += legs[x]
                             #print('complete_distance_to_cheaper',complete_distance_to_cheaper)
                            # print('airports[stopped_at_port].currencyeurorate',airports[stopped_at_port].currencyeurorate)
-                        fuel_to_buy =complete_distance_to_cheaper-current_fuel
+                            fuel_to_buy =complete_distance_to_cheaper-current_fuel
                         #print(current_fuel)
                         #print(complete_distance_to_cheaper)
                         #print(fuel_to_buy)
-                        cost_to_buy = (airports[stopped_at_port].currencyeurorate) * (fuel_to_buy)
-                        current_fuel = current_fuel + fuel_to_buy
-                        cost_fuel_bought += cost_to_buy
+                            cost_to_buy = (airports[stopped_at_port].currencyeurorate) * (fuel_to_buy)
+                            current_fuel = current_fuel + fuel_to_buy
+                            cost_fuel_bought += cost_to_buy
 
                         if stopped_at_port == 0:
                             fuel_strategy = [fuel_to_buy]
@@ -127,17 +123,17 @@ class Cheapest():
 
 
 
-                if cost_fuel_bought < cheapest_so_far:
-                    cheapest_so_far=cost_fuel_bought
-                    self.cheapest_cost = int(cost_fuel_bought)
-                    self. cheapest_legs_distances = legs
-                    self. cheapest_distance = total_distance
-                    self.cheapest_route = route
-                    self.cheapest_purchase_strategy = [int(x) for x in purchase_strategy]
-                    self.cheapest_route_number=routenumber
-                    self.cheapest_fuel_strategy=fuel_strategy
+            if cost_fuel_bought < cheapest_so_far:
+                cheapest_so_far=cost_fuel_bought
+                self.cheapest_cost = int(cost_fuel_bought)
+                self. cheapest_legs_distances = legs
+                self. cheapest_distance = total_distance
+                self.cheapest_route = route
+                self.cheapest_purchase_strategy = [int(x) for x in purchase_strategy]
+                self.cheapest_route_number=routenumber
+                self.cheapest_fuel_strategy=fuel_strategy
 
-        print('legs',self.cheapest_legs_distances,'\n','purchases',self.cheapest_purchase_strategy,'fuel stategy',self.cheapest_fuel_strategy,'\n',self.cheapest_route,'\n',self.cheapest_route_number)
+        #print('legs',self.cheapest_legs_distances,'\n','purchases',self.cheapest_purchase_strategy,'fuel stategy',self.cheapest_fuel_strategy,'\n',self.cheapest_route,'\n',self.cheapest_route_number)
 
         #def main():
             #uncomment to check different starting permutations of same route to check consistency of algorithm
@@ -210,6 +206,9 @@ def main():
               58: ['LHR', 'DUB', 'BUS', 'TUF', 'DUB', 'AOC', 'LHR'],
               59: ['LHR', 'DUB', 'BUS', 'TUF', 'AOC', 'DUB', 'LHR']}
     range=7000
-    Cheapest(candidates,range)
+    x= Cheapest(candidates,range)
+    print(x.cheapest_route)
+    print(x.cheapest_legs_distances)
+    print(x.cheapest_cost)
 if __name__ == '__main__':
     main()
